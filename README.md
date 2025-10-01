@@ -97,6 +97,8 @@ We welcome your contributions and PRs.
 
 We currently support deployment to [Cloudflare Workers](./docs/deployment/workers.md) (recommended) and [Cloudflare Pages](./docs/deployment/pages.md).
 
+> **Note**: Sink now uses Cloudflare D1 for database storage. If you're upgrading from a KV-based version, please refer to the [Migration Guide](./docs/MIGRATION.md).
+
 ## ⚒️ Configuration
 
 [Configuration Docs](./docs/configuration.md)
