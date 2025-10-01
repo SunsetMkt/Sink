@@ -10,7 +10,7 @@
 
 5. Save and deploy the project.
 6. Cancel the deployment, then go to **Settings** -> **Bindings** -> **Add**:
-   - **KV Namespace**: Bind the variable name `KV` to a [KV namespace](https://developers.cloudflare.com/kv/) (create a new one under **Storage & Databases** -> **KV**).
+   - **D1 Database**: Bind the variable name `DB` to a [D1 database](https://developers.cloudflare.com/d1/) (create a new one under **Storage & Databases** -> **D1**). After creating the database, run the migrations from `migrations/0001_initial_schema.sql` using the Cloudflare dashboard or Wrangler CLI.
    - **Workers AI** (_Optional_): Bind the variable name `AI` to the Workers AI Catalog.
    - **Analytics Engine**:
      - In **Workers & Pages**, go to **Account details** in the right panel, locate `Analytics Engine`, and click `Set up` to enable the free tier.

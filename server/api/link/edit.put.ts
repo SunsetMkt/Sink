@@ -10,10 +10,9 @@ export default eventHandler(async (event) => {
     })
   }
   const link = await readValidatedBody(event, LinkSchema.parse)
-  const { cloudflare } = event.context
-  const { KV } = cloudflare.env
+  const db = useDB(event)
 
-  const existingLink: z.infer<typeof LinkSchema> | null = await KV.get(`link:${link.slug}`, { type: 'json' })
+  const existingLink: z.infer<typeof LinkSchema> | null = await getLinkBySlug(db, link.slug)
   if (existingLink) {
     const newLink = {
       ...existingLink,
@@ -22,15 +21,7 @@ export default eventHandler(async (event) => {
       createdAt: existingLink.createdAt, // don't update createdAt
       updatedAt: Math.floor(Date.now() / 1000),
     }
-    const expiration = getExpiration(event, newLink.expiration)
-    await KV.put(`link:${newLink.slug}`, JSON.stringify(newLink), {
-      expiration,
-      metadata: {
-        expiration,
-        url: newLink.url,
-        comment: newLink.comment,
-      },
-    })
+    await updateLink(db, newLink)
     setResponseStatus(event, 201)
     const shortLink = `${getRequestProtocol(event)}://${getRequestHost(event)}/${newLink.slug}`
     return { link: newLink, shortLink }

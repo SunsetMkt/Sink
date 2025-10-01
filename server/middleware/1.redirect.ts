@@ -5,27 +5,24 @@ import { parsePath, withQuery } from 'ufo'
 export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, '')) // remove leading and trailing slashes
   const { slugRegex, reserveSlug } = useAppConfig(event)
-  const { homeURL, linkCacheTtl, redirectWithQuery, caseSensitive } = useRuntimeConfig(event)
+  const { homeURL, redirectWithQuery, caseSensitive } = useRuntimeConfig(event)
   const { cloudflare } = event.context
 
   if (event.path === '/' && homeURL)
     return sendRedirect(event, homeURL)
 
   if (slug && !reserveSlug.includes(slug) && slugRegex.test(slug) && cloudflare) {
-    const { KV } = cloudflare.env
+    const db = useDB(event)
 
     let link: z.infer<typeof LinkSchema> | null = null
 
-    const getLink = async (key: string) =>
-      await KV.get(`link:${key}`, { type: 'json', cacheTtl: linkCacheTtl })
-
     const lowerCaseSlug = slug.toLowerCase()
-    link = await getLink(caseSensitive ? slug : lowerCaseSlug)
+    link = await getLinkBySlug(db, caseSensitive ? slug : lowerCaseSlug)
 
     // fallback to original slug if caseSensitive is false and the slug is not found
     if (!caseSensitive && !link && lowerCaseSlug !== slug) {
       console.log('original slug fallback:', `slug:${slug} lowerCaseSlug:${lowerCaseSlug}`)
-      link = await getLink(slug)
+      link = await getLinkBySlug(db, slug)
     }
 
     if (link) {

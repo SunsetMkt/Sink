@@ -2,11 +2,11 @@
 
 ## 1. Why can't I create a link?
 
-Please check the Cloudflare KV bindings, the KV environment variable name should be all uppercase letters.
+Please check the Cloudflare D1 bindings, the D1 environment variable name should be `DB` (all uppercase letters). Also ensure that you have run the database migrations.
 
 <details>
   <summary><b>Screenshot</b></summary>
-  <img alt="KV Bindings setting in Cloudflare" src="/docs/images/faqs-kv.png"/>
+  <img alt="D1 Bindings setting in Cloudflare" src="/docs/images/faqs-d1.png"/>
 </details>
 
 ## 2. Why can't I log in?

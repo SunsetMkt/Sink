@@ -8,11 +8,10 @@ export default eventHandler(async (event) => {
     link.slug = link.slug.toLowerCase()
   }
 
-  const { cloudflare } = event.context
-  const { KV } = cloudflare.env
+  const db = useDB(event)
 
   // Check if link exists
-  const existingLink = await KV.get(`link:${link.slug}`, { type: 'json' })
+  const existingLink = await getLinkBySlug(db, link.slug)
 
   if (existingLink) {
     // If link exists, return it along with the short link
@@ -21,16 +20,7 @@ export default eventHandler(async (event) => {
   }
 
   // If link doesn't exist, create it
-  const expiration = getExpiration(event, link.expiration)
-
-  await KV.put(`link:${link.slug}`, JSON.stringify(link), {
-    expiration,
-    metadata: {
-      expiration,
-      url: link.url,
-      comment: link.comment,
-    },
-  })
+  await createLink(db, link)
 
   setResponseStatus(event, 201)
   const shortLink = `${getRequestProtocol(event)}://${getRequestHost(event)}/${link.slug}`

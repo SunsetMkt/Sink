@@ -1,14 +1,10 @@
 export default eventHandler(async (event) => {
   const slug = getQuery(event).slug
   if (slug) {
-    const { cloudflare } = event.context
-    const { KV } = cloudflare.env
-    const { metadata, value: link } = await KV.getWithMetadata(`link:${slug}`, { type: 'json' })
+    const db = useDB(event)
+    const link = await getLinkBySlug(db, slug as string)
     if (link) {
-      return {
-        ...metadata,
-        ...link,
-      }
+      return link
     }
   }
   throw createError({

@@ -91,8 +91,8 @@ export default defineNuxtConfig({
     analytics: true,
     blob: false,
     cache: false,
-    database: false,
-    kv: true,
+    database: true,
+    kv: false,
     workers: provider !== 'cloudflare_pages',
   },
 

@@ -8,8 +8,7 @@ export default eventHandler(async (event) => {
   }
   const { slug } = await readBody(event)
   if (slug) {
-    const { cloudflare } = event.context
-    const { KV } = cloudflare.env
-    await KV.delete(`link:${slug}`)
+    const db = useDB(event)
+    await deleteLink(db, slug)
   }
 })
