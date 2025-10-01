@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
   }).parse)
 
   const { links, total } = await listLinks(db, limit, cursor)
-  
+
   const hasMore = cursor + limit < total
   const nextCursor = hasMore ? cursor + limit : undefined
 

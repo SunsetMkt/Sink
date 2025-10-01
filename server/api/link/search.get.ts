@@ -1,12 +1,6 @@
-interface Link {
-  slug: string
-  url: string
-  comment?: string
-}
-
 export default eventHandler(async (event) => {
   const db = useDB(event)
-  
+
   try {
     const links = await searchLinks(db)
     return links.map(link => ({

@@ -35,7 +35,7 @@ export default eventHandler(async (event) => {
 
   const db = useDB(event)
   const existingLink = await getLinkBySlug(db, link.slug)
-  
+
   if (existingLink) {
     throw createError({
       status: 409, // Conflict

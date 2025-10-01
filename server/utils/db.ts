@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
 import type { LinkSchema } from '@@/schemas/link'
+import type { H3Event } from 'h3'
 import type { z } from 'zod'
 
 export type Link = z.infer<typeof LinkSchema>
@@ -50,19 +50,20 @@ export async function getLinkBySlug(db: D1Database, slug: string): Promise<Link 
     .prepare('SELECT * FROM links WHERE slug = ? LIMIT 1')
     .bind(slug)
     .first<{
-      id: string
-      slug: string
-      url: string
-      comment?: string
-      title?: string
-      description?: string
-      image?: string
-      created_at: number
-      updated_at: number
-      expiration?: number
-    }>()
+    id: string
+    slug: string
+    url: string
+    comment?: string
+    title?: string
+    description?: string
+    image?: string
+    created_at: number
+    updated_at: number
+    expiration?: number
+  }>()
 
-  if (!result) return null
+  if (!result)
+    return null
 
   return {
     id: result.id,
@@ -149,17 +150,17 @@ export async function listLinks(
     .prepare('SELECT * FROM links ORDER BY created_at DESC LIMIT ? OFFSET ?')
     .bind(limit, offset)
     .all<{
-      id: string
-      slug: string
-      url: string
-      comment?: string
-      title?: string
-      description?: string
-      image?: string
-      created_at: number
-      updated_at: number
-      expiration?: number
-    }>()
+    id: string
+    slug: string
+    url: string
+    comment?: string
+    title?: string
+    description?: string
+    image?: string
+    created_at: number
+    updated_at: number
+    expiration?: number
+  }>()
 
   const links = (result.results || []).map(row => ({
     id: row.id,
@@ -184,17 +185,17 @@ export async function searchLinks(db: D1Database): Promise<Link[]> {
   const result = await db
     .prepare('SELECT * FROM links ORDER BY created_at DESC')
     .all<{
-      id: string
-      slug: string
-      url: string
-      comment?: string
-      title?: string
-      description?: string
-      image?: string
-      created_at: number
-      updated_at: number
-      expiration?: number
-    }>()
+    id: string
+    slug: string
+    url: string
+    comment?: string
+    title?: string
+    description?: string
+    image?: string
+    created_at: number
+    updated_at: number
+    expiration?: number
+  }>()
 
   return (result.results || []).map(row => ({
     id: row.id,
